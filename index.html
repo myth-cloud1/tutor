@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TUTOR LEDGER — Independent Tutor Management System</title>
+  <meta name="description" content="TUTOR LEDGER is a modern, centralized dashboard for independent home tutors to manage student records, class schedules, attendance, fees, payments, balances, and pending dues.">
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app" class="app-layout">
+    
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+            <path d="M6 6h10"/>
+            <path d="M6 10h10"/>
+            <path d="M6 14h6"/>
+            <circle cx="16" cy="15" r="3" fill="#4f46e5" stroke="none"/>
+            <path d="m15 15 1 1 2-2" stroke="#fff" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">TUTOR LEDGER</h1>
+          <span class="brand-subtitle">Tutor Management</span>
+        </div>
+        <button id="sidebar-close-btn" class="sidebar-close-btn" aria-label="Close Sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Quick Status Widget in Sidebar -->
+      <div class="sidebar-user-card">
+        <div class="user-avatar" id="sidebar-avatar">TL</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-tutor-name">Prof. Palle Sharma</div>
+          <div class="user-role">Private Home Tutor</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">MAIN NAVIGATION</div>
+        <a href="#dashboard" class="nav-item active" data-page="dashboard" id="nav-dashboard">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="#students" class="nav-item" data-page="students" id="nav-students">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Students</span>
+          <span class="badge nav-badge" id="nav-students-count">0</span>
+        </a>
+        <a href="#schedule" class="nav-item" data-page="schedule" id="nav-schedule">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+          <span>Class Schedule</span>
+          <span class="badge nav-badge badge-today" id="nav-today-count">0</span>
+        </a>
+        <a href="#attendance" class="nav-item" data-page="attendance" id="nav-attendance">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span>Attendance</span>
+        </a>
+        <a href="#payments" class="nav-item" data-page="payments" id="nav-payments">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/><text x="14" y="16" font-size="6" fill="currentColor">₹</text></svg>
+          <span>Payments & Dues</span>
+          <span class="badge nav-badge badge-danger" id="nav-overdue-count" style="display:none;">0</span>
+        </a>
+
+        <div class="nav-section-title">MANAGEMENT</div>
+        <a href="#notifications" class="nav-item" data-page="notifications" id="nav-notifications">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <span>Notifications</span>
+          <span class="badge nav-badge badge-warning" id="nav-unread-count" style="display:none;">0</span>
+        </a>
+        <a href="#reports" class="nav-item" data-page="reports" id="nav-reports">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+          <span>Reports</span>
+        </a>
+        <a href="#settings" class="nav-item" data-page="settings" id="nav-settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="btn-quick-sample-data" class="btn btn-outline btn-sm btn-full" title="Reload clean sample records">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+          <span>Reset Demo Data</span>
+        </button>
+        <div class="system-tag">TUTOR LEDGER v2.4 • Standalone</div>
+      </div>
+    </aside>
+
+    <!-- Sidebar Backdrop for Mobile -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <div class="header-left">
+          <button id="sidebar-toggle-btn" class="header-icon-btn" aria-label="Toggle Sidebar">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="18" y2="18"/></svg>
+          </button>
+          <div class="header-title-box">
+            <h2 id="page-main-heading" class="page-main-heading">Dashboard</h2>
+            <span id="header-date-badge" class="header-date-badge">Loading date...</span>
+          </div>
+        </div>
+
+        <!-- Global Search Bar -->
+        <div class="header-center">
+          <div class="global-search-wrapper">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg>
+            <input type="text" id="global-search-input" class="global-search-input" placeholder="Search student name, ID, phone, subject..." autocomplete="off">
+            <button id="global-search-clear" class="search-clear-btn" style="display:none;">&times;</button>
+            <div id="global-search-results" class="global-search-results" style="display:none;"></div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Quick Action Dropdown -->
+          <div class="dropdown-wrapper">
+            <button id="btn-header-quick-action" class="btn btn-primary btn-sm">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+              <span>+ Quick Action</span>
+            </button>
+            <div id="quick-action-menu" class="dropdown-menu">
+              <button class="dropdown-item" data-action="add-student">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+                <span>Add New Student</span>
+              </button>
+              <button class="dropdown-item" data-action="schedule-class">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><line x1="12" x2="12" y1="14" y2="18"/><line x1="10" x2="14" y1="16" y2="16"/></svg>
+                <span>Schedule a Class</span>
+              </button>
+              <button class="dropdown-item" data-action="mark-attendance">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+                <span>Mark Attendance</span>
+              </button>
+              <button class="dropdown-item" data-action="record-payment">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/><line x1="12" x2="12" y1="14" y2="18"/><line x1="10" x2="14" y1="16" y2="16"/></svg>
+                <span>Record Fee Payment</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Notification Bell -->
+          <div class="dropdown-wrapper">
+            <button id="header-bell-btn" class="header-icon-btn position-relative" aria-label="Notifications">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+              <span id="header-bell-badge" class="notification-dot" style="display:none;"></span>
+            </button>
+            <div id="header-notifications-dropdown" class="dropdown-menu notifications-popover">
+              <div class="popover-header">
+                <h6>Notifications</h6>
+                <button id="btn-popover-mark-all-read" class="btn-text-sm">Mark all read</button>
+              </div>
+              <div id="popover-notifications-list" class="popover-list">
+                <!-- Dynamically loaded -->
+              </div>
+              <div class="popover-footer">
+                <a href="#notifications" class="view-all-link">View all notifications &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Currency Indicator -->
+          <div class="header-currency-badge" id="header-currency-badge" title="Active Currency">
+            <span class="currency-symbol">₹</span> INR
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Scrollable Content Container -->
+      <main id="main-content" class="content-container">
+
+        <!-- ========================================== -->
+        <!-- 1. DASHBOARD PAGE -->
+        <!-- ========================================== -->
+        <section id="page-dashboard" class="page-section active">
+          <!-- Top Welcome & Quick Actions -->
+          <div class="dashboard-banner">
+            <div class="banner-text">
+              <h2 class="banner-title">Welcome back, <span id="dash-greeting-name">Prof. Palle</span> 👋</h2>
+              <p class="banner-desc">Here is your daily tutor ledger summary, scheduled classes, and real-time dues overview.</p>
+            </div>
+            <div class="banner-actions">
+              <button class="btn btn-primary" id="dash-btn-add-student">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+                <span>Add Student</span>
+              </button>
+              <button class="btn btn-secondary" id="dash-btn-schedule">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                <span>Schedule Class</span>
+              </button>
+              <button class="btn btn-outline" id="dash-btn-record-payment">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                <span>Record Payment</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 8 Summary Cards Grid -->
+          <div class="kpi-grid">
+            <div class="kpi-card" data-navigate="students">
+              <div class="kpi-icon-wrap bg-blue-subtle text-blue">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <div class="kpi-details">
+                <span class="kpi-label">Total Students</span>
+                <div class="kpi-value" id="kpi-total-students">0</div>
+                <span class="kpi-subtext" id="kpi-active-students-sub">0 Active Tutees</span>
+              </div>
+            </div>
+
+            <div class="kpi-card" data-navigate="schedule">
+              <div class="kpi-icon-wrap bg-indigo-subtle text-indigo">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+              </div>
+              <div class="kpi-details">
+                <span class="kpi-label">Classes Scheduled Today</span>
+                <div class="kpi-value" id="kpi-classes-today">0</div>
+                <span class="kpi-subtext" id="kpi-classes-today-sub">Scheduled for today</span>
+              </div>
+            </div>
+
+            <div class="kpi-card" data-navigate="attendance">
+              <div class="kpi-icon-wrap bg-emerald-subtle text-emerald">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+              </div>
+              <div class="kpi-details">
+                <span class="kpi-label">Classes Completed</span>
+                <div class="kpi-value" id="kpi-classes-completed">0</div>
+                <span class="kpi-subtext" id="kpi-classes-completed-sub">Past & conducted</span>
+              </div>
+            </div>
+
+            <div class="kpi-card" data-navigate="attendance">
+              <div class="kpi-icon-wrap bg-teal-subtle text-teal">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              </div>
+              <div class="kpi-details">
+                <span class="kpi-label">Attendance Rate</span>
+                <div class="kpi-value" id="kpi-attendance-rate">0%</div>
+                <span class="kpi-subtext">Overall student presence</span>
+              </div>
+            </div>
+
+            <div class="kpi-card" data-navigate="payments">
+              <div class="kpi-icon-wrap bg-purple-subtle text-purple">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <div class="kpi-details">
+                <span class="kpi-label">Total Fees Expected</span>
+                <div class="kpi-value" id="kpi-fees-expected">₹0</div>
+                <span class="kpi-subtext">Generated fee ledger</span>
+              </div>
+            </div>
+
+            <div class="kpi-card kpi-success" data-navigate="payments">
+              <div class="kpi-icon-wrap bg-green-subtle text-green">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="m7 15 3 3 7-7"/></svg>
+              </div>
+              <div class="kpi-details">
+                <span class="kpi-label">Payments Received</span>
+                <div class="kpi-value" id="kpi-payments-received">₹0</div>
+                <span class="kpi-subtext text-success font-weight-500">Collected in full</span>
+              </div>
+            </div>
+
+            <div class="kpi-card kpi-warning" data-navigate="payments">
+              <div class="kpi-icon-wrap bg-amber-subtle text-amber">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+              </div>
+              <div class="kpi-details">
+                <span class="kpi-label">Outstanding Balance</span>
+                <div class="kpi-value" id="kpi-outstanding-balance">₹0</div>
+                <span class="kpi-subtext text-warning">Upcoming & pending dues</span>
+              </div>
+            </div>
+
+            <div class="kpi-card kpi-danger" data-navigate="payments">
+              <div class="kpi-icon-wrap bg-rose-subtle text-rose">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg>
+              </div>
+              <div class="kpi-details">
+                <span class="kpi-label">Overdue Dues</span>
+                <div class="kpi-value" id="kpi-overdue-dues">₹0</div>
+                <span class="kpi-subtext text-danger font-weight-500" id="kpi-overdue-count-sub">0 accounts overdue</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard Content Row 1: Today's Schedule & Monthly Chart -->
+          <div class="grid-2-col">
+            <!-- Today's Schedule -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Today's Class Schedule</h3>
+                  <p class="card-subtitle" id="dash-schedule-date-str">Classes scheduled for today</p>
+                </div>
+                <a href="#schedule" class="btn btn-outline btn-xs">View Calendar &rarr;</a>
+              </div>
+              <div class="card-body p-0">
+                <div id="dash-today-schedule-list" class="schedule-timeline-list">
+                  <!-- Populated dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Monthly Payment Collection Chart -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Fee Collection Trends</h3>
+                  <p class="card-subtitle">Monthly fee generated vs payments received</p>
+                </div>
+                <span class="badge badge-indigo">Dynamic Data</span>
+              </div>
+              <div class="card-body">
+                <div id="dash-collection-chart-container" class="chart-container">
+                  <!-- Dynamic SVG Bar Chart -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard Content Row 2: Overdue/Pending Dues & Recent Payments -->
+          <div class="grid-2-col mt-4">
+            <!-- Pending / Overdue Dues -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Students with Pending or Overdue Dues</h3>
+                  <p class="card-subtitle">Actionable billing accounts needing collection</p>
+                </div>
+                <a href="#payments" class="btn btn-outline btn-xs">All Dues &rarr;</a>
+              </div>
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Student</th>
+                        <th>Billing Cycle / Period</th>
+                        <th>Balance</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="dash-pending-dues-tbody">
+                      <!-- Dynamic rows -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Payments -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Recent Fee Payments</h3>
+                  <p class="card-subtitle">Latest recorded receipts and settlements</p>
+                </div>
+                <button class="btn btn-primary btn-xs" id="dash-btn-quick-record-pay">
+                  + Record Payment
+                </button>
+              </div>
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Student</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Method</th>
+                        <th>Receipt</th>
+                      </tr>
+                    </thead>
+                    <tbody id="dash-recent-payments-tbody">
+                      <!-- Dynamic rows -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upcoming Classes List -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Upcoming Classes (Next 7 Days)</h3>
+                <p class="card-subtitle">Preview upcoming sessions, regular and performance extra classes</p>
+              </div>
+              <button class="btn btn-primary btn-sm" id="dash-btn-schedule-new">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+                <span>Schedule Class</span>
+              </button>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Date & Time</th>
+                      <th>Student</th>
+                      <th>Subject</th>
+                      <th>Class Type</th>
+                      <th>Mode / Venue</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dash-upcoming-classes-tbody">
+                    <!-- Dynamic -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- 2. STUDENTS MANAGEMENT PAGE -->
+        <!-- ========================================== -->
+        <section id="page-students" class="page-section">
+          <!-- Page Header Controls -->
+          <div class="section-top-bar">
+            <div>
+              <h2 class="section-title">Student Directory</h2>
+              <p class="section-desc">Manage student profiles, fee arrangements, attendance histories, and individual ledgers.</p>
+            </div>
+            <div class="section-actions">
+              <button class="btn btn-primary" id="btn-open-add-student-modal">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+                <span>Add New Student</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Filters & Search Toolbar -->
+          <div class="card toolbar-card">
+            <div class="toolbar-flex">
+              <div class="search-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg>
+                <input type="text" id="students-search-input" placeholder="Search by name, ID, phone, subject, grade...">
+              </div>
+              <div class="filter-group">
+                <label for="filter-student-status">Status:</label>
+                <select id="filter-student-status" class="form-select-sm">
+                  <option value="all">All Statuses</option>
+                  <option value="active" selected>Active Only</option>
+                  <option value="inactive">Inactive / Archived</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="filter-student-dues">Payment Status:</label>
+                <select id="filter-student-dues" class="form-select-sm">
+                  <option value="all">All Payment Statuses</option>
+                  <option value="paid">Fully Paid (₹0 Balance)</option>
+                  <option value="pending">Pending Dues</option>
+                  <option value="overdue">Overdue Dues</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="sort-students-by">Sort By:</label>
+                <select id="sort-students-by" class="form-select-sm">
+                  <option value="name_asc">Name (A-Z)</option>
+                  <option value="name_desc">Name (Z-A)</option>
+                  <option value="balance_desc">Highest Balance First</option>
+                  <option value="date_newest">Newest Enrolled</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Students Table Card -->
+          <div class="card mt-3">
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Student ID</th>
+                      <th>Student Name</th>
+                      <th>Grade & Subjects</th>
+                      <th>Parent & Contact</th>
+                      <th>Fee Arrangement</th>
+                      <th>Outstanding Balance</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="students-table-tbody">
+                    <!-- Dynamic Rows -->
+                  </tbody>
+                </table>
+              </div>
+              <div id="students-empty-state" class="empty-state" style="display:none;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="17" x2="23" y1="11" y2="11"/></svg>
+                <h4>No students found</h4>
+                <p>No student records match the selected filters or search terms.</p>
+                <button class="btn btn-outline btn-sm mt-2" id="btn-reset-student-filters">Reset Filters</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- 3. CLASS SCHEDULE & CALENDAR PAGE -->
+        <!-- ========================================== -->
+        <section id="page-schedule" class="page-section">
+          <div class="section-top-bar">
+            <div>
+              <h2 class="section-title">Class Schedule & Calendar</h2>
+              <p class="section-desc">Plan sessions, schedule performance-based extra classes, check tutor availability, and prevent conflicts.</p>
+            </div>
+            <div class="section-actions">
+              <button class="btn btn-primary" id="btn-open-schedule-modal">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+                <span>+ Schedule Class</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Calendar Controls -->
+          <div class="card toolbar-card">
+            <div class="calendar-header-toolbar">
+              <div class="cal-nav-buttons">
+                <button class="btn btn-outline btn-sm" id="cal-btn-prev">&larr; Prev</button>
+                <button class="btn btn-outline btn-sm" id="cal-btn-today">Today</button>
+                <button class="btn btn-outline btn-sm" id="cal-btn-next">Next &rarr;</button>
+                <h3 class="cal-current-label" id="cal-current-label">October 2026</h3>
+              </div>
+              <div class="cal-view-toggles">
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-group-item active" data-view="month" id="view-toggle-month">Month</button>
+                  <button class="btn btn-sm btn-group-item" data-view="week" id="view-toggle-week">Week</button>
+                  <button class="btn btn-sm btn-group-item" data-view="day" id="view-toggle-day">Day</button>
+                  <button class="btn btn-sm btn-group-item" data-view="list" id="view-toggle-list">List View</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Conflict Warning Banner (Hidden by default) -->
+          <div id="calendar-conflict-alert" class="alert alert-warning mt-3" style="display:none;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+            <div id="calendar-conflict-alert-text">Warning: Overlapping classes detected for this time slot.</div>
+          </div>
+
+          <!-- Calendar Views Container -->
+          <div class="card mt-3">
+            <div class="card-body p-0">
+              <!-- Month View Grid -->
+              <div id="calendar-month-view" class="calendar-month-grid">
+                <!-- Dynamically Generated -->
+              </div>
+
+              <!-- Week / Day View Container -->
+              <div id="calendar-time-grid-view" class="calendar-time-grid-view" style="display:none;">
+                <!-- Dynamically Generated -->
+              </div>
+
+              <!-- List View -->
+              <div id="calendar-list-view" class="calendar-list-view" style="display:none;">
+                <div class="table-responsive">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Student</th>
+                        <th>Subject</th>
+                        <th>Class Type</th>
+                        <th>Venue / Link</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="cal-list-view-tbody">
+                      <!-- Dynamic -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- 4. ATTENDANCE MANAGEMENT PAGE -->
+        <!-- ========================================== -->
+        <section id="page-attendance" class="page-section">
+          <div class="section-top-bar">
+            <div>
+              <h2 class="section-title">Class Attendance Tracker</h2>
+              <p class="section-desc">Mark student attendance for scheduled classes, audit past records, and auto-feed per-class billing calculations.</p>
+            </div>
+          </div>
+
+          <!-- Attendance Date Selector & Class Picker Card -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Select Scheduled Class to Mark Attendance</h3>
+            </div>
+            <div class="card-body">
+              <div class="grid-3-col">
+                <div class="form-group">
+                  <label for="att-date-picker">Class Date:</label>
+                  <input type="date" id="att-date-picker" class="form-input">
+                </div>
+                <div class="form-group">
+                  <label for="att-class-select">Scheduled Class for Date:</label>
+                  <select id="att-class-select" class="form-select">
+                    <option value="">-- Choose a scheduled class --</option>
+                  </select>
+                </div>
+                <div class="form-group flex-align-end">
+                  <button class="btn btn-primary btn-full" id="btn-load-class-attendance">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+                    <span>Load Attendance Roster</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Active Class Attendance Marking Area -->
+              <div id="att-marking-panel" class="att-marking-panel mt-4" style="display:none;">
+                <div class="att-class-info-card">
+                  <div class="att-info-main">
+                    <h4 id="att-info-title">Mathematics - Grade 10</h4>
+                    <p id="att-info-time">10:00 AM - 11:30 AM • In-Person at Tutor's Home</p>
+                    <span id="att-info-badge" class="badge badge-primary">Regular Class</span>
+                  </div>
+                  <div class="att-billing-note" id="att-billing-note">
+                    Billing Rule: Per-Class (₹600/class)
+                  </div>
+                </div>
+
+                <div class="att-student-action-row mt-3">
+                  <div class="att-student-meta">
+                    <div class="student-avatar" id="att-student-avatar">AN</div>
+                    <div>
+                      <div class="student-name font-weight-600" id="att-student-name">Aarav Nair</div>
+                      <div class="student-id-sub text-muted" id="att-student-id">TL-2026-001</div>
+                    </div>
+                  </div>
+
+                  <!-- Status Buttons Group -->
+                  <div class="att-status-buttons" id="att-status-btn-group">
+                    <button type="button" class="btn-att-status" data-status="Present">
+                      <span class="dot dot-present"></span> Present
+                    </button>
+                    <button type="button" class="btn-att-status" data-status="Absent">
+                      <span class="dot dot-absent"></span> Absent
+                    </button>
+                    <button type="button" class="btn-att-status" data-status="Late">
+                      <span class="dot dot-late"></span> Late
+                    </button>
+                    <button type="button" class="btn-att-status" data-status="Excused">
+                      <span class="dot dot-excused"></span> Excused
+                    </button>
+                  </div>
+                </div>
+
+                <div class="grid-2-col mt-3">
+                  <div class="form-group">
+                    <label for="att-notes-input">Session Topics & Progress Notes (Optional):</label>
+                    <input type="text" id="att-notes-input" class="form-input" placeholder="e.g. Completed Chapter 4 Polynomials, homework assigned p.42">
+                  </div>
+                  <div class="form-group flex-align-end">
+                    <button class="btn btn-success btn-full" id="btn-save-attendance-record">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                      <span>Save Attendance & Update Fee Ledger</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Attendance History & Audit Log -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Attendance Audit History</h3>
+                <p class="card-subtitle">Complete chronological record with corrections and audit timestamps</p>
+              </div>
+              <div class="card-header-actions">
+                <select id="att-history-filter-student" class="form-select-sm">
+                  <option value="all">All Students</option>
+                  <!-- Populated dynamically -->
+                </select>
+                <select id="att-history-filter-status" class="form-select-sm">
+                  <option value="all">All Statuses</option>
+                  <option value="Present">Present</option>
+                  <option value="Absent">Absent</option>
+                  <option value="Late">Late</option>
+                  <option value="Excused">Excused</option>
+                </select>
+              </div>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Student</th>
+                      <th>Subject</th>
+                      <th>Class Type</th>
+                      <th>Status</th>
+                      <th>Fee Impact</th>
+                      <th>Session Notes</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="att-history-tbody">
+                    <!-- Dynamic Rows -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- 5. PAYMENTS & DUES MANAGEMENT PAGE -->
+        <!-- ========================================== -->
+        <section id="page-payments" class="page-section">
+          <div class="section-top-bar">
+            <div>
+              <h2 class="section-title">Payments & Dues Ledger</h2>
+              <p class="section-desc">Track fee balances, record partial or full receipts, prevent overpayments, and issue payment summaries.</p>
+            </div>
+            <div class="section-actions">
+              <button class="btn btn-primary" id="btn-open-record-payment-modal">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+                <span>Record Fee Payment</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Financial Snapshot Banner -->
+          <div class="payment-stats-banner">
+            <div class="pstat-item">
+              <span class="pstat-label">Total Fees Generated</span>
+              <span class="pstat-val" id="paystat-total-fees">₹0</span>
+            </div>
+            <div class="pstat-divider"></div>
+            <div class="pstat-item">
+              <span class="pstat-label">Total Payments Received</span>
+              <span class="pstat-val text-success" id="paystat-total-received">₹0</span>
+            </div>
+            <div class="pstat-divider"></div>
+            <div class="pstat-item">
+              <span class="pstat-label">Current Outstanding</span>
+              <span class="pstat-val text-warning" id="paystat-total-outstanding">₹0</span>
+            </div>
+            <div class="pstat-divider"></div>
+            <div class="pstat-item">
+              <span class="pstat-label">Total Overdue Dues</span>
+              <span class="pstat-val text-danger" id="paystat-total-overdue">₹0</span>
+            </div>
+          </div>
+
+          <!-- Dues Table (Itemized Student Receivables) -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Student Fee Dues & Receivables</h3>
+                <p class="card-subtitle">Transparent calculation of fee charges, payments allocated, and remaining balance</p>
+              </div>
+              <div class="filter-group">
+                <select id="dues-status-filter" class="form-select-sm">
+                  <option value="all">All Dues</option>
+                  <option value="overdue">Overdue Only</option>
+                  <option value="pending">Pending Only</option>
+                  <option value="paid">Settled / Paid Only</option>
+                </select>
+              </div>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Student</th>
+                      <th>Billing Method</th>
+                      <th>Fee Item / Cycle</th>
+                      <th>Total Fee</th>
+                      <th>Paid</th>
+                      <th>Outstanding</th>
+                      <th>Due Date</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dues-table-tbody">
+                    <!-- Dynamic -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- All Recorded Payments Table with Receipt Buttons -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Payment Transaction History</h3>
+                <p class="card-subtitle">Chronological ledger of receipts, payment modes, and printable receipts</p>
+              </div>
+              <div class="search-box">
+                <input type="text" id="payments-history-search" class="form-input-sm" placeholder="Filter by student or ref #">
+              </div>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Receipt #</th>
+                      <th>Date</th>
+                      <th>Student</th>
+                      <th>Amount Received</th>
+                      <th>Payment Method</th>
+                      <th>Reference ID</th>
+                      <th>Applied To</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="payments-history-tbody">
+                    <!-- Dynamic Rows -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- 6. IN-APP NOTIFICATIONS PAGE -->
+        <!-- ========================================== -->
+        <section id="page-notifications" class="page-section">
+          <div class="section-top-bar">
+            <div>
+              <h2 class="section-title">In-App Notification Center</h2>
+              <p class="section-desc">Automated alerts for today's classes, upcoming fee due dates, overdue accounts, and recent transactions.</p>
+            </div>
+            <div class="section-actions">
+              <button class="btn btn-outline" id="btn-notif-mark-all-read">Mark All as Read</button>
+              <button class="btn btn-outline btn-danger-outline" id="btn-notif-clear-read">Clear Read</button>
+            </div>
+          </div>
+
+          <div class="card mt-3">
+            <div class="card-body p-0">
+              <div id="full-notifications-list" class="full-notifications-list">
+                <!-- Dynamically Generated -->
+              </div>
+              <div id="notif-empty-state" class="empty-state" style="display:none;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                <h4>No notifications right now</h4>
+                <p>You're completely up to date! Check back as classes approach or payment due dates arrive.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- 7. REPORTS & HISTORY PAGE -->
+        <!-- ========================================== -->
+        <section id="page-reports" class="page-section">
+          <div class="section-top-bar">
+            <div>
+              <h2 class="section-title">Reports & Financial Analytics</h2>
+              <p class="section-desc">Comprehensive reports based on actual saved records. Export to CSV or print for bookkeeping.</p>
+            </div>
+            <div class="section-actions">
+              <button class="btn btn-outline" id="btn-export-reports-csv">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                <span>Export CSV</span>
+              </button>
+              <button class="btn btn-primary" id="btn-print-report">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+                <span>Print Report</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Report Date Filter Controls -->
+          <div class="card toolbar-card">
+            <div class="toolbar-flex">
+              <div class="filter-group">
+                <label for="report-period-select">Report Timeframe:</label>
+                <select id="report-period-select" class="form-select-sm">
+                  <option value="all">All Time</option>
+                  <option value="this_month" selected>This Month</option>
+                  <option value="last_month">Last Month</option>
+                  <option value="this_year">This Year (2026)</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="report-student-select">Student Filter:</label>
+                <select id="report-student-select" class="form-select-sm">
+                  <option value="all">All Students</option>
+                  <!-- Populated dynamically -->
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reports KPI Strip -->
+          <div class="kpi-grid mt-3">
+            <div class="kpi-card">
+              <div class="kpi-label">Total Fees Invoiced</div>
+              <div class="kpi-value text-indigo" id="rep-total-fees">₹0</div>
+              <span class="kpi-subtext">Sum of all billings</span>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Total Collected</div>
+              <div class="kpi-value text-success" id="rep-total-collected">₹0</div>
+              <span class="kpi-subtext" id="rep-collection-pct">0% Collection Rate</span>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Total Outstanding</div>
+              <div class="kpi-value text-warning" id="rep-total-outstanding">₹0</div>
+              <span class="kpi-subtext">Unsettled fees</span>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Classes Conducted</div>
+              <div class="kpi-value text-blue" id="rep-classes-conducted">0</div>
+              <span class="kpi-subtext" id="rep-extra-classes-sub">0 Extra Classes</span>
+            </div>
+          </div>
+
+          <!-- Student-wise Financial & Attendance Breakdown Table -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <h3 class="card-title">Student-Wise Summary Report</h3>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="data-table" id="report-student-summary-table">
+                  <thead>
+                    <tr>
+                      <th>Student</th>
+                      <th>Grade & Subject</th>
+                      <th>Billing Arrangement</th>
+                      <th>Classes Taken</th>
+                      <th>Attendance %</th>
+                      <th>Fees Generated</th>
+                      <th>Paid</th>
+                      <th>Outstanding</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="reports-student-tbody">
+                    <!-- Dynamic -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- 8. SETTINGS PAGE -->
+        <!-- ========================================== -->
+        <section id="page-settings" class="page-section">
+          <div class="section-top-bar">
+            <div>
+              <h2 class="section-title">Tutor Ledger Settings & Preferences</h2>
+              <p class="section-desc">Configure your tutor profile, billing policies, default currency, cancellation rules, and data backups.</p>
+            </div>
+            <div class="section-actions">
+              <button class="btn btn-primary" id="btn-save-settings">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                <span>Save Settings</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid-2-col mt-3">
+            <!-- Tutor Profile Information -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Tutor Profile & Receipts Info</h3>
+              </div>
+              <div class="card-body">
+                <form id="settings-profile-form">
+                  <div class="form-group">
+                    <label for="set-tutor-name">Tutor Full Name *</label>
+                    <input type="text" id="set-tutor-name" class="form-input" value="Prof. Palle Sharma" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="set-tutor-title">Professional Title / Subject Specialization</label>
+                    <input type="text" id="set-tutor-title" class="form-input" value="Senior Mathematics & Physics Tutor">
+                  </div>
+                  <div class="grid-2-col">
+                    <div class="form-group">
+                      <label for="set-tutor-phone">Phone Number</label>
+                      <input type="text" id="set-tutor-phone" class="form-input" value="+91 98765 43210">
+                    </div>
+                    <div class="form-group">
+                      <label for="set-tutor-email">Email Address</label>
+                      <input type="email" id="set-tutor-email" class="form-input" value="palle.tutor@example.com">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="set-tutor-address">Address / Studio Location (Printed on Receipts)</label>
+                    <input type="text" id="set-tutor-address" class="form-input" value="42 Academic Heights, Bengaluru, KA">
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Billing Policies & Defaults -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Billing Policies & Defaults</h3>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label for="set-currency">Default Currency *</label>
+                  <select id="set-currency" class="form-select">
+                    <option value="INR" selected>₹ Indian Rupee (INR)</option>
+                    <option value="USD">$ US Dollar (USD)</option>
+                    <option value="GBP">£ British Pound (GBP)</option>
+                    <option value="EUR">€ Euro (EUR)</option>
+                    <option value="AED">AED UAE Dirham</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="set-default-billing">Default Student Billing Model</label>
+                  <select id="set-default-billing" class="form-select">
+                    <option value="per_class" selected>Per-Class Billing (Pay per conducted class)</option>
+                    <option value="monthly">Monthly Fixed Billing (Flat rate per month)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="set-default-duration">Default Class Duration (Minutes)</label>
+                  <input type="number" id="set-default-duration" class="form-input" value="60" min="15" step="15">
+                </div>
+                
+                <h4 class="mt-4 mb-2 font-size-14 text-muted">ATTENDANCE & CANCELLATION RULES</h4>
+                
+                <div class="setting-toggle-row">
+                  <div>
+                    <div class="font-weight-600">Charge for Student Absence</div>
+                    <div class="text-muted font-size-12">If an unexcused absence occurs, bill the per-class fee.</div>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="set-charge-absent" checked>
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+
+                <div class="setting-toggle-row mt-3">
+                  <div>
+                    <div class="font-weight-600">Charge for Late Cancellations</div>
+                    <div class="text-muted font-size-12">Bill cancelled class if cancelled less than 24h prior.</div>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="set-charge-cancelled">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Data Management & Backup -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <h3 class="card-title">Data Storage, Backup & Slates</h3>
+            </div>
+            <div class="card-body">
+              <p class="text-muted mb-3">All records are stored securely in your browser's persistent local database storage. You can backup your ledger, restore from JSON, or reset to demo data at any time.</p>
+              <div class="flex-wrap-gap">
+                <button class="btn btn-outline" id="btn-backup-json">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                  <span>Export Full Backup (JSON)</span>
+                </button>
+                <label class="btn btn-outline cursor-pointer mb-0">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                  <span>Import Backup (JSON)</span>
+                  <input type="file" id="input-import-json" accept=".json" style="display:none;">
+                </label>
+                <button class="btn btn-outline" id="btn-load-demo-data">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                  <span>Reload Realistic Demo Records</span>
+                </button>
+                <button class="btn btn-outline btn-danger-outline" id="btn-clear-all-data">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  <span>Clear All Records</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- MODALS -->
+  <!-- ========================================== -->
+
+  <!-- 1. Add / Edit Student Modal -->
+  <div id="modal-student" class="modal-overlay">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-student-title">Add New Student</h3>
+        <button class="modal-close-btn" data-close="modal-student">&times;</button>
+      </div>
+      <form id="form-student">
+        <div class="modal-body">
+          <input type="hidden" id="student-form-id">
+          
+          <div class="grid-2-col">
+            <div class="form-group">
+              <label for="stu-name">Student Full Name *</label>
+              <input type="text" id="stu-name" class="form-input" placeholder="e.g. Aarav Nair" required>
+            </div>
+            <div class="form-group">
+              <label for="stu-parent">Parent / Guardian Name *</label>
+              <input type="text" id="stu-parent" class="form-input" placeholder="e.g. Ramesh Nair" required>
+            </div>
+          </div>
+
+          <div class="grid-2-col">
+            <div class="form-group">
+              <label for="stu-phone">Contact Phone Number *</label>
+              <input type="tel" id="stu-phone" class="form-input" placeholder="e.g. +91 98450 12345" required>
+            </div>
+            <div class="form-group">
+              <label for="stu-email">Email Address (Optional)</label>
+              <input type="email" id="stu-email" class="form-input" placeholder="e.g. ramesh.nair@example.com">
+            </div>
+          </div>
+
+          <div class="grid-2-col">
+            <div class="form-group">
+              <label for="stu-grade">Class Level / Grade *</label>
+              <input type="text" id="stu-grade" class="form-input" placeholder="e.g. Grade 10 / ICSE" required>
+            </div>
+            <div class="form-group">
+              <label for="stu-subjects">Subjects Taught *</label>
+              <input type="text" id="stu-subjects" class="form-input" placeholder="e.g. Mathematics, Physics" required>
+            </div>
+          </div>
+
+          <div class="grid-2-col">
+            <div class="form-group">
+              <label for="stu-start-date">Enrollment Start Date *</label>
+              <input type="date" id="stu-start-date" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label for="stu-preferred-time">Preferred Days & Times</label>
+              <input type="text" id="stu-preferred-time" class="form-input" placeholder="e.g. Mon, Wed, Fri at 5:00 PM">
+            </div>
+          </div>
+
+          <div class="form-section-divider">FEE ARRANGEMENT & BILLING</div>
+
+          <div class="grid-3-col">
+            <div class="form-group">
+              <label for="stu-billing-method">Billing Method *</label>
+              <select id="stu-billing-method" class="form-select" required>
+                <option value="per_class">Per-Class Billing</option>
+                <option value="monthly">Monthly Fixed Fee</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="stu-fee-amount" id="stu-fee-label">Fee per Class (<span class="curr-sym">₹</span>) *</label>
+              <input type="number" id="stu-fee-amount" class="form-input" min="0" placeholder="e.g. 600" required>
+            </div>
+            <div class="form-group">
+              <label for="stu-due-day">Payment Due / Cycle Day *</label>
+              <input type="number" id="stu-due-day" class="form-input" min="1" max="31" value="5" title="Day of month for billing" required>
+            </div>
+          </div>
+
+          <div class="grid-2-col">
+            <div class="form-group">
+              <label for="stu-status">Student Status</label>
+              <select id="stu-status" class="form-select">
+                <option value="active">Active Tutee</option>
+                <option value="inactive">Inactive / Archived</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="stu-notes">Academic Notes / Goals</label>
+              <input type="text" id="stu-notes" class="form-input" placeholder="e.g. Preparing for Board exams; needs extra algebra help">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-close="modal-student">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-student">Save Student Profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- 2. Schedule Class Modal -->
+  <div id="modal-schedule" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-schedule-title">Schedule a Class</h3>
+        <button class="modal-close-btn" data-close="modal-schedule">&times;</button>
+      </div>
+      <form id="form-schedule">
+        <div class="modal-body">
+          <input type="hidden" id="schedule-form-id">
+          
+          <div class="form-group">
+            <label for="sch-student">Select Student *</label>
+            <select id="sch-student" class="form-select" required>
+              <option value="">-- Choose student --</option>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="sch-subject">Subject *</label>
+            <input type="text" id="sch-subject" class="form-input" placeholder="e.g. Mathematics" required>
+          </div>
+
+          <div class="grid-3-col">
+            <div class="form-group">
+              <label for="sch-date">Class Date *</label>
+              <input type="date" id="sch-date" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label for="sch-start-time">Start Time *</label>
+              <input type="time" id="sch-start-time" class="form-input" value="16:00" required>
+            </div>
+            <div class="form-group">
+              <label for="sch-end-time">End Time *</label>
+              <input type="time" id="sch-end-time" class="form-input" value="17:00" required>
+            </div>
+          </div>
+
+          <div class="grid-2-col">
+            <div class="form-group">
+              <label for="sch-mode">Class Mode *</label>
+              <select id="sch-mode" class="form-select">
+                <option value="in_person">In-Person (Home / Studio)</option>
+                <option value="online">Online (Zoom / Meet)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="sch-venue">Venue or Meeting Link</label>
+              <input type="text" id="sch-venue" class="form-input" placeholder="e.g. Student's Home or meet.google.com/xyz">
+            </div>
+          </div>
+
+          <!-- Performance Extra Class Section -->
+          <div class="extra-class-box">
+            <div class="flex-between">
+              <label class="checkbox-label" for="sch-is-extra">
+                <input type="checkbox" id="sch-is-extra">
+                <span class="font-weight-600 text-indigo">Performance-Based Extra Academic Support Class</span>
+              </label>
+            </div>
+            <div id="extra-class-details" class="mt-2" style="display:none;">
+              <div class="form-group">
+                <label for="sch-extra-reason">Academic Support Reason / Learning Difficulties *</label>
+                <input type="text" id="sch-extra-reason" class="form-input" placeholder="e.g. Extra coaching on Trigonometry proofs before mock test">
+              </div>
+              <div class="form-group mb-0">
+                <label class="checkbox-label" for="sch-extra-chargeable">
+                  <input type="checkbox" id="sch-extra-chargeable" checked>
+                  <span>Apply fee for this extra class (Chargeable according to fee policy)</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group mt-3">
+            <label for="sch-notes">Session Notes / Instructions</label>
+            <input type="text" id="sch-notes" class="form-input" placeholder="e.g. Bring previous test papers">
+          </div>
+
+          <!-- Conflict Warning Banner in modal -->
+          <div id="modal-conflict-warning" class="alert alert-warning" style="display:none;">
+            <strong>Time Overlap Detected:</strong> Another class is scheduled during this time. Please adjust the time or confirm overlap.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-close="modal-schedule">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-schedule">Schedule Class</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- 3. Record Payment Modal -->
+  <div id="modal-payment" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Record Fee Payment</h3>
+        <button class="modal-close-btn" data-close="modal-payment">&times;</button>
+      </div>
+      <form id="form-payment">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="pay-student">Select Student *</label>
+            <select id="pay-student" class="form-select" required>
+              <option value="">-- Choose student --</option>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+
+          <!-- Current Student Balance Preview Box -->
+          <div id="pay-student-balance-box" class="callout-box" style="display:none;">
+            <div class="flex-between">
+              <span class="text-muted">Total Outstanding Balance:</span>
+              <span class="font-weight-700 text-danger" id="pay-current-outstanding">₹0</span>
+            </div>
+            <div class="flex-between mt-1 font-size-12">
+              <span class="text-muted">Billing Cycle:</span>
+              <span id="pay-billing-cycle-info">Per-Class</span>
+            </div>
+          </div>
+
+          <div class="grid-2-col">
+            <div class="form-group">
+              <label for="pay-amount">Amount Received (<span class="curr-sym">₹</span>) *</label>
+              <input type="number" id="pay-amount" class="form-input" min="1" step="1" placeholder="e.g. 2500" required>
+              <button type="button" class="btn-text-sm text-indigo mt-1" id="btn-fill-full-balance" style="display:none;">Pay Full Balance</button>
+            </div>
+            <div class="form-group">
+              <label for="pay-date">Payment Date *</label>
+              <input type="date" id="pay-date" class="form-input" required>
+            </div>
+          </div>
+
+          <div class="grid-2-col">
+            <div class="form-group">
+              <label for="pay-method">Payment Method *</label>
+              <select id="pay-method" class="form-select" required>
+                <option value="UPI">UPI (GPay / PhonePe / Paytm)</option>
+                <option value="Cash">Cash</option>
+                <option value="Bank Transfer">Bank Transfer (NEFT/IMPS)</option>
+                <option value="Cheque">Cheque</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="pay-ref">Transaction Reference / UTR #</label>
+              <input type="text" id="pay-ref" class="form-input" placeholder="e.g. UPI-92847192">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="pay-applied-to">Billing Period / Due Description *</label>
+            <input type="text" id="pay-applied-to" class="form-input" placeholder="e.g. October 2026 Classes or Partial Settlement" required>
+          </div>
+
+          <div class="form-group">
+            <label for="pay-notes">Payment Notes</label>
+            <input type="text" id="pay-notes" class="form-input" placeholder="e.g. Paid via father's Google Pay">
+          </div>
+
+          <!-- Overpayment Confirmation Alert -->
+          <div id="pay-overpayment-alert" class="alert alert-warning" style="display:none;">
+            <strong>Notice:</strong> The entered amount (<span id="pay-overpay-entered">₹0</span>) exceeds the current outstanding balance (<span id="pay-overpay-balance">₹0</span>). The excess will be credited toward upcoming classes.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-close="modal-payment">Cancel</button>
+          <button type="submit" class="btn btn-success" id="btn-save-payment">Record Payment & Generate Receipt</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- 4. Student Detailed Profile Modal (Drawer/Modal with 6 Tabs) -->
+  <div id="modal-student-profile" class="modal-overlay">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-header">
+        <div class="profile-header-meta">
+          <div class="student-avatar-lg" id="prof-avatar">AN</div>
+          <div>
+            <h3 class="modal-title mb-0" id="prof-name">Aarav Nair</h3>
+            <span class="badge badge-indigo" id="prof-id-badge">TL-2026-001</span>
+            <span class="badge badge-success ml-1" id="prof-status-badge">Active</span>
+          </div>
+        </div>
+        <button class="modal-close-btn" data-close="modal-student-profile">&times;</button>
+      </div>
+
+      <!-- Tab Navigation -->
+      <div class="modal-tabs">
+        <button class="modal-tab active" data-tab="tab-prof-overview">Overview & Ledger</button>
+        <button class="modal-tab" data-tab="tab-prof-schedule">Class Schedule</button>
+        <button class="modal-tab" data-tab="tab-prof-attendance">Attendance History</button>
+        <button class="modal-tab" data-tab="tab-prof-fees">Fee Calculation Audit</button>
+        <button class="modal-tab" data-tab="tab-prof-payments">Payments Made</button>
+        <button class="modal-tab" data-tab="tab-prof-activity">Activity Log</button>
+      </div>
+
+      <div class="modal-body p-4">
+        <!-- Tab 1: Overview & Ledger -->
+        <div id="tab-prof-overview" class="profile-tab-content active">
+          <!-- Summary Cards for Student -->
+          <div class="grid-4-col mb-4">
+            <div class="summary-stat-box">
+              <span class="text-muted font-size-12">Total Fees Billed</span>
+              <div class="stat-value text-indigo" id="prof-total-fees">₹0</div>
+            </div>
+            <div class="summary-stat-box">
+              <span class="text-muted font-size-12">Payments Received</span>
+              <div class="stat-value text-success" id="prof-total-paid">₹0</div>
+            </div>
+            <div class="summary-stat-box">
+              <span class="text-muted font-size-12">Outstanding Balance</span>
+              <div class="stat-value text-warning" id="prof-balance">₹0</div>
+            </div>
+            <div class="summary-stat-box">
+              <span class="text-muted font-size-12">Attendance Rate</span>
+              <div class="stat-value text-teal" id="prof-att-rate">100%</div>
+            </div>
+          </div>
+
+          <div class="grid-2-col">
+            <div class="card bg-gray-50">
+              <div class="card-header pb-2">
+                <h4 class="font-size-15 font-weight-600">Student & Contact Details</h4>
+                <button class="btn btn-outline btn-xs" id="btn-edit-student-from-profile">Edit Details</button>
+              </div>
+              <div class="card-body">
+                <dl class="profile-detail-list">
+                  <div><dt>Grade / Class:</dt><dd id="prof-detail-grade">Grade 10</dd></div>
+                  <div><dt>Subjects:</dt><dd id="prof-detail-subjects">Mathematics, Physics</dd></div>
+                  <div><dt>Parent / Guardian:</dt><dd id="prof-detail-parent">Ramesh Nair</dd></div>
+                  <div><dt>Contact Phone:</dt><dd id="prof-detail-phone">+91 98450 12345</dd></div>
+                  <div><dt>Email:</dt><dd id="prof-detail-email">ramesh.nair@example.com</dd></div>
+                  <div><dt>Enrollment Date:</dt><dd id="prof-detail-start-date">01 Oct 2026</dd></div>
+                  <div><dt>Preferred Time:</dt><dd id="prof-detail-preferred">Mon, Wed, Fri at 5 PM</dd></div>
+                  <div><dt>Academic Notes:</dt><dd id="prof-detail-notes">None</dd></div>
+                </dl>
+              </div>
+            </div>
+
+            <div class="card bg-gray-50">
+              <div class="card-header pb-2">
+                <h4 class="font-size-15 font-weight-600">Fee Arrangement & Next Due</h4>
+                <button class="btn btn-primary btn-xs" id="btn-profile-record-pay">+ Record Payment</button>
+              </div>
+              <div class="card-body">
+                <dl class="profile-detail-list">
+                  <div><dt>Billing Method:</dt><dd id="prof-detail-billing-type">Per-Class Billing</dd></div>
+                  <div><dt>Fee Rate:</dt><dd id="prof-detail-fee-rate">₹600 per class</dd></div>
+                  <div><dt>Billing / Due Day:</dt><dd id="prof-detail-due-day">5th of every month</dd></div>
+                  <div><dt>Next Due Date:</dt><dd id="prof-detail-next-due">05 Nov 2026</dd></div>
+                  <div><dt>Payment Status:</dt><dd id="prof-detail-pay-status"><span class="badge badge-success">Paid</span></dd></div>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Class Schedule -->
+        <div id="tab-prof-schedule" class="profile-tab-content">
+          <div class="flex-between mb-3">
+            <h4 class="font-size-15 font-weight-600">Classes for this Student</h4>
+            <button class="btn btn-primary btn-xs" id="btn-profile-add-class">+ Schedule Class</button>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date & Time</th>
+                  <th>Subject</th>
+                  <th>Type</th>
+                  <th>Venue</th>
+                  <th>Attendance Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="prof-schedule-tbody">
+                <!-- Dynamic -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 3: Attendance History -->
+        <div id="tab-prof-attendance" class="profile-tab-content">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Subject</th>
+                  <th>Class Type</th>
+                  <th>Attendance Status</th>
+                  <th>Notes / Topics</th>
+                  <th>Audited At</th>
+                </tr>
+              </thead>
+              <tbody id="prof-attendance-tbody">
+                <!-- Dynamic -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 4: Fee Calculation Audit -->
+        <div id="tab-prof-fees" class="profile-tab-content">
+          <div class="callout-box mb-3">
+            <h4 class="font-size-15 font-weight-600 mb-1">Transparent Fee Calculation Formula</h4>
+            <p class="font-size-13 text-muted" id="prof-calc-formula-explanation">
+              <strong>Outstanding Balance</strong> = Fees Generated (Chargeable Classes × Rate) − Payments Allocated
+            </p>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Item / Class Date</th>
+                  <th>Description</th>
+                  <th>Chargeable Status</th>
+                  <th>Fee Amount</th>
+                  <th>Running Balance</th>
+                </tr>
+              </thead>
+              <tbody id="prof-fees-audit-tbody">
+                <!-- Dynamic rows showing itemized math -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 5: Payments Made -->
+        <div id="tab-prof-payments" class="profile-tab-content">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Receipt #</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Method</th>
+                  <th>Ref ID</th>
+                  <th>Notes</th>
+                  <th>Receipt</th>
+                </tr>
+              </thead>
+              <tbody id="prof-payments-tbody">
+                <!-- Dynamic -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 6: Activity Log -->
+        <div id="tab-prof-activity" class="profile-tab-content">
+          <div class="activity-timeline" id="prof-activity-timeline">
+            <!-- Dynamic timeline items -->
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" data-close="modal-student-profile">Close Profile</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 5. Payment Receipt / Printable Summary Modal -->
+  <div id="modal-receipt" class="modal-overlay">
+    <div class="modal-dialog modal-md">
+      <div class="modal-header">
+        <h3 class="modal-title">Payment Receipt</h3>
+        <button class="modal-close-btn" data-close="modal-receipt">&times;</button>
+      </div>
+      <div class="modal-body p-0">
+        <!-- Printable Receipt Box -->
+        <div id="printable-receipt" class="printable-receipt-card">
+          <div class="receipt-header">
+            <div class="receipt-brand">
+              <h2 class="receipt-title">TUTOR LEDGER</h2>
+              <span class="receipt-subtitle">Official Fee Receipt</span>
+            </div>
+            <div class="receipt-meta">
+              <div class="receipt-num font-weight-700" id="rec-number">REC-2026-001</div>
+              <div class="receipt-date text-muted" id="rec-date">16 Oct 2026</div>
+            </div>
+          </div>
+
+          <div class="receipt-tutor-banner">
+            <div>
+              <strong id="rec-tutor-name">Prof. Palle Sharma</strong><br>
+              <span id="rec-tutor-title">Senior Private Tutor</span> • <span id="rec-tutor-phone">+91 98765 43210</span>
+            </div>
+            <div class="text-right">
+              <span class="badge badge-success font-size-13">PAID IN FULL</span>
+            </div>
+          </div>
+
+          <div class="receipt-grid">
+            <div>
+              <span class="text-muted font-size-11">STUDENT DETAILS:</span>
+              <div class="font-weight-600 font-size-15" id="rec-student-name">Aarav Nair</div>
+              <div class="text-muted font-size-12" id="rec-student-id">ID: TL-2026-001 • Grade 10</div>
+              <div class="text-muted font-size-12" id="rec-parent-name">Parent: Ramesh Nair</div>
+            </div>
+            <div class="text-right">
+              <span class="text-muted font-size-11">PAYMENT DETAILS:</span>
+              <div class="font-size-12">Method: <strong id="rec-method">UPI</strong></div>
+              <div class="font-size-12">Ref #: <strong id="rec-ref">UPI-82918301</strong></div>
+              <div class="font-size-12">Applied To: <strong id="rec-period">October 2026 Classes</strong></div>
+            </div>
+          </div>
+
+          <div class="receipt-table-box">
+            <table class="receipt-table">
+              <thead>
+                <tr>
+                  <th>Description</th>
+                  <th class="text-right">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <span id="rec-item-desc">Tuition Fee Settlement</span>
+                    <div class="text-muted font-size-11" id="rec-notes">Payment acknowledged with thanks</div>
+                  </td>
+                  <td class="text-right font-weight-700 font-size-16" id="rec-amount">₹2,400</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="receipt-balance-strip">
+            <span>Remaining Student Outstanding Balance:</span>
+            <strong id="rec-remaining-balance" class="text-success">₹0</strong>
+          </div>
+
+          <div class="receipt-footer">
+            <p class="font-size-11 text-muted">This is an authorized computer-generated tuition fee receipt from <strong>TUTOR LEDGER</strong>.</p>
+            <div class="signature-line">Authorized Tutor Signature</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" data-close="modal-receipt">Close</button>
+        <button type="button" class="btn btn-primary" id="btn-print-receipt-action">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+          <span>Print Receipt</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Toast Notifications Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- JavaScript Scripts (Vanilla JS with Zero external runtime dependencies) -->
+  <script src="js/store.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/students.js"></script>
+  <script src="js/schedule.js"></script>
+  <script src="js/attendance.js"></script>
+  <script src="js/payments.js"></script>
+  <script src="js/reports.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
